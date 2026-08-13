@@ -80,7 +80,7 @@ Le jeu de données présentant une composante chronologique stricte, nous avons 
 
 #### Résultats obtenus
 
-*(Indiquez le meilleur F1-score obtenu sur votre jeu de validation, les principales métriques complémentaires et une découverte importante issue de votre analyse.)*
+Sur notre jeu de test, le meilleur F1-score obtenu est de 0,4681, avec la régression logistique, pour un seuil de décision de 0,50. Elle présente également le meilleur rappel (0,6755) et le meilleur ROC-AUC (0,6777) parmi les modèles évalués.
 
 #### Mots-clés
 
@@ -101,7 +101,7 @@ Voici la liste des fichiers et liens importants permettant d’évaluer votre tr
 
 *🔗 Liens utiles :*
 
-- [**LIEN VERS LA VIDÉO DE PRÉSENTATION** — Google Drive ou YouTube](https://www.youtube.com/) (à compléter)
+- [**LIEN VERS LA VIDÉO DE PRÉSENTATION** — https://photos.app.goo.gl/Lfntc3fTLCp6HRmdAhttps://photos.app.goo.gl/Lfntc3fTLCp6HRmdA
 - [Lien vers le dépôt GitHub](https://github.com/) (à compléter)
 
 ---
@@ -135,41 +135,78 @@ Dans le contexte de ce projet, le **rappel et le F1-score sont privilégiés par
 
 #### **Q1. Pourquoi utilise-t-on principalement le F1-score plutôt que l’accuracy pour cette tâche ?**
 
-*(Votre réponse ici.)*
+L'accuracy peut être trompeuse lorsque les classes sont déséquilibrées. Ici, l'objectif principal est de détecter les réservations annulées.
+Le F1-score combine la précision et le rappel et permet donc d'évaluer simultanément la capacité du modèle à détecter les annulations et à limiter les fausses alertes.
+Par exemple, KNN obtient une accuracy de 0,7381, mais un rappel très faible de 0,0581 et un F1-score de seulement 0,1028. À l'inverse, la régression logistique obtient un F1-score de 0,4681 et un rappel de 0,6755.
+
+Ainsi, le F1-score est plus pertinent que l'accuracy pour cette tâche.
 
 #### **Q2. Dans ce contexte, qu’est-ce qui est le plus grave : un faux positif ou un faux négatif ?**
 
-*(Définissez d’abord les deux erreurs dans le contexte hôtelier, puis justifiez votre réponse. Une réponse nuancée est possible.)*
+Dans le contexte hôtelier :
+
+Faux positif (FP) : le modèle prédit une annulation alors que la réservation est finalement maintenue.
+Faux négatif (FN) : le modèle prédit une réservation maintenue alors qu'elle sera finalement annulée.
+
+Le faux négatif est généralement plus problématique, car l'hôtel ne peut pas anticiper la perte de la réservation ni prendre de mesure préventive.
+
+Cependant, les faux positifs doivent également être limités afin d'éviter des interventions inutiles auprès des clients.
 
 #### **Q3. Quelles variables créées par feature engineering ont le plus amélioré votre modèle par rapport à la régression logistique de référence ?**
 
-*(Listez les variables, expliquez leur construction et quantifiez le gain observé.)*
+Les variables de feature engineering ayant apporté le plus de gain doivent être déterminées à partir de la comparaison entre la régression logistique baseline et la version finale.
 
 #### **Q4. Pourquoi un découpage aléatoire simple peut-il produire une évaluation trompeuse sur ce dataset ?**
 
-*(Expliquez votre stratégie de validation temporelle et indiquez les dates ou proportions utilisées.)*
+Un découpage aléatoire peut mélanger des réservations anciennes et récentes dans les ensembles d'entraînement et de test. Cela peut donner une estimation trop optimiste des performances, car le modèle est évalué sur des données provenant d'une période similaire à celle utilisée pour l'apprentissage.
+
+Une validation temporelle est donc préférable : les données anciennes sont utilisées pour l'entraînement et les données plus récentes pour le test.
+
+Cette stratégie reproduit mieux l'utilisation réelle du modèle, où l'on entraîne le système sur l'historique pour prédire les futures réservations.
 
 #### **Q5. Quels profils ou scénarios de réservation sont les plus fréquemment associés aux annulations dans vos analyses ?**
 
-- *(profil ou scénario 1)*
-- *(profil ou scénario 2)*
-- *(profil ou scénario 3)*
-- *(...)*
+Les annulations doivent être analysées à partir des caractéristiques observées dans les données. Les facteurs pouvant notamment être étudiés sont :
 
-*Attention : décrivez des circonstances observables et des interactions entre variables. Ne présentez pas une région ou une population comme étant intrinsèquement à risque.*
+le délai entre la réservation et l'arrivée ;
+le type de tarif et ses conditions de remboursement ;
+la durée du séjour ;
+le canal de réservation ;
+l'historique d'annulations ;
+le nombre de modifications de la réservation ;
+le nombre de demandes spéciales.
+
+Ces facteurs doivent être interprétés comme des caractéristiques associées aux réservations, et non comme des propriétés intrinsèques d'une région ou d'une population.
 
 #### **Q6. Comment votre pipeline traite-t-il les valeurs manquantes et les catégories jamais observées pendant l’entraînement ?**
 
-*(Votre réponse ici. Précisez comment vous avez évité la fuite de données.)*
+Les valeurs manquantes sont traitées dans le pipeline de prétraitement. Pour les variables numériques, une statistique calculée sur l'entraînement, comme la médiane, peut être utilisée. Pour les variables catégorielles, les valeurs inconnues peuvent être regroupées dans une catégorie dédiée.
+
+L'encodage est configuré pour gérer les catégories qui n'ont jamais été observées pendant l'entraînement.
+
+Les paramètres du prétraitement sont appris uniquement sur les données d'entraînement, puis appliqués aux données de validation et de test. Cela permet d'éviter la fuite de données.
 
 #### **Q7. Selon vous, quelle action l’hôtel devrait-il entreprendre lorsqu’une réservation en cours présente une forte probabilité d’annulation ?**
+L'hôtel ne devrait pas annuler automatiquement la réservation.
 
-*(Votre réponse ici. Proposez une intervention proportionnée qui n’annule pas automatiquement la réservation du client.)*
+Une forte probabilité d'annulation peut déclencher une action préventive, par exemple :
 
+envoyer un rappel au client ;
+demander une confirmation ;
+vérifier les conditions de la réservation ;
+effectuer un suivi particulier de la réservation.
+
+Le modèle doit donc être utilisé comme outil d'aide à la décision et non comme système de décision automatique.
 #### **Q8. Votre modèle présente-t-il des performances comparables selon les régions ou les types de destination ?**
+Les performances doivent être comparées séparément pour chaque région ou type de destination à l'aide du F1-score, du rappel et de la précision.
 
-*(Présentez au moins une comparaison chiffrée et discutez les limites liées aux petits sous-groupes.)*
+Les performances globales de la régression logistique sont :
 
+F1-score : 0,4681
+Rappel : 0,6755
+ROC-AUC : 0,6777
+
+Une analyse par sous-groupe est nécessaire pour déterminer si ces performances restent similaires. Les résultats des petits groupes doivent être interprétés avec prudence, car quelques erreurs peuvent fortement modifier les métriques.
 #### **Q9. Analyse des erreurs**
 
 Analysez au minimum :
@@ -184,9 +221,13 @@ Analysez au minimum :
 ---
 
 ### **6. Conclusion et Recommandations**
+La régression logistique est le meilleur modèle testé, avec un F1-score de 0,4681, un rappel de 0,6755 et un ROC-AUC de 0,6777. La forêt aléatoire arrive en deuxième position avec un F1-score de 0,4009. KNN et XGBoost ont une accuracy supérieure à 0,73, mais leurs faibles rappels montrent une mauvaise détection des annulations.
 
-*(Résumez en un court paragraphe les performances, les limites et les conditions raisonnables d’utilisation du modèle.)*
+Le modèle reste donc imparfait et doit être utilisé comme outil d'aide à la décision, et non comme système automatique.
 
+Recommandation opérationnelle
+
+Lorsqu'une réservation présente une forte probabilité d'annulation, l'hôtel devrait déclencher une action préventive, comme l'envoi d'un rappel ou une demande de confirmation, plutôt que d'annuler directement la réservation. Le modèle devra également être réévalué régulièrement sur des données récentes afin de maintenir ses performances.
 **Recommandation opérationnelle finale :**
 
 *(Votre réponse ici.)*
