@@ -102,6 +102,7 @@ Voici la liste des fichiers et liens importants permettant d’évaluer votre tr
 *🔗 Liens utiles :*
 
 - [**LIEN VERS LA VIDÉO DE PRÉSENTATION** — https://photos.app.goo.gl/Lfntc3fTLCp6HRmdAhttps://photos.app.goo.gl/Lfntc3fTLCp6HRmdA
+- - [**LIEN VERS LA VIDÉO DE PRÉSENTATION** — https://photos.google.com/share/AF1QipOFR5ey9wkSsHOtNnz16pKlh5Ay-axmiQCf6aw_G5rqCKwkwkuKQ_BqzqsG6J06Fw/photo/AF1QipNdkf6WZ3G8EJtO7U4rckszKklCmpd4kSJJD62P?key=YzZyakJXTXVpVDh3MS1wVkctREhwYjhZMG9Bb0t3
 - [Lien vers le dépôt GitHub](https://github.com/) (à compléter)
 
 ---
