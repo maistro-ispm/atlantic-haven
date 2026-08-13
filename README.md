@@ -16,7 +16,7 @@ Merci de lister tous les membres de l’équipe ayant effectivement participé a
 - prénom(s) : Fiderana
 - classe : IGGLIA 4
 - numéro :  33
-- rôle : Lead Developer
+- rôle : développeur, analyste.
 
 #### Membre 2
 
@@ -24,7 +24,7 @@ Merci de lister tous les membres de l’équipe ayant effectivement participé a
 - prénom(s) : Lova Nasaina
 - classe : IGGLIA 4
 - numéro : 06
-- rôle : Data Scientist
+- rôle : Lead Developer, Data Scientist
 
 #### Membre 3
 
@@ -92,39 +92,43 @@ Classification binaire, validation temporelle, F1-score, feature engineering, pi
 
 Voici la liste des fichiers et liens importants permettant d’évaluer votre travail :
 
-- **notebook.ipynb** : code complet de l’EDA, du prétraitement, de la modélisation et de l’évaluation ;
-- **submission.csv** : prédictions sur `reservations_test.csv` ;
-- **README.md** : présent rapport complété ;
-- **requirements.txt** : dépendances nécessaires à la reproduction du projet *(si nécessaire)* ;
-- *(ajoutez ici les autres fichiers utiles sans inclure les fichiers temporaires).* 
 
-**🔗 Liens utiles :**
+- *notebook.ipynb* : code complet de l’EDA, du prétraitement, de la modélisation et de l’évaluation — exécutable de bout en bout depuis un noyau vierge (sorties incluses) ;
+- *submission.csv* : prédictions sur reservations_test.csv (2 000 lignes, 3 colonnes, ordre des identifiants préservé) ;
+- *README.md* : présent rapport ;
+- *requirements.txt* : dépendances nécessaires à la reproduction ;
+- *scripts/* : versions scripts des étapes (EDA, features, modèles, analyse d'erreurs, soumission, génération du notebook).
 
-- [**LIEN VERS LA VIDÉO DE PRÉSENTATION** — Google Drive ou YouTube](https://www.youtube.com/)
-- [Lien vers le dépôt GitHub](https://github.com/)
-- [Lien vers une autre ressource — facultatif](https://www.google.com/)
+*🔗 Liens utiles :*
+
+- [**LIEN VERS LA VIDÉO DE PRÉSENTATION** — Google Drive ou YouTube](https://www.youtube.com/) (à compléter)
+- [Lien vers le dépôt GitHub](https://github.com/) (à compléter)
 
 ---
+### *4. Résultats de Modélisation*
 
-### **4. Résultats de Modélisation**
-
-Présentez les résultats obtenus sur **le même jeu de validation** afin que la comparaison soit valide.
+Les quatre modèles ont été entraînés et évalués sur le **même jeu de test**, avec `reservation_annulee` comme variable cible. Les métriques retenues sont le F1-score, la précision, le rappel et le ROC-AUC.
 
 | Modèle | Paramètres principaux | F1-score | Précision | Rappel | ROC-AUC |
 |---|---|---:|---:|---:|---:|
-| Régression logistique — baseline |  |  |  |  |  |
-| Modèle 2 |  |  |  |  |  |
-| Modèle 3 |  |  |  |  |  |
-| Modèle final |  |  |  |  |  |
+| Régression logistique — baseline | `max_iter=1000` | 0,4681 | 0,3582 | 0,6755 | 0,6777 |
+| KNN | `k=15`, `weights=distance` | 0,1028 | 0,4444 | 0,0581 | 0,5762 |
+| Forêt aléatoire | 300 arbres, `max_depth=15`, `min_samples_leaf=2`, `class_weight=balanced`** | 0,4009 | 0,3930 | 0,4092 | 0,6560 |
+| XGBoost | 300 arbres, `learning_rate=0,05`, `max_depth=6` | 0,2022 | 0,4463 | 0,1308 | 0,6551 |
 
-**Seuil de décision retenu :** *(votre réponse ici)*
+*Seuil de décision retenu :* seuil par défaut de **0,50** pour l'ensemble des modèles. Les résultats correspondent aux prédictions obtenues directement sur le jeu de test, sans optimisation supplémentaire du seuil de classification.
 
-**Justification du choix du modèle final :**
+*Justification du choix du modèle final :*
 
-*(Votre réponse ici. Ne vous limitez pas au score : considérez la stabilité, l’interprétabilité, les erreurs et le coût métier.)*
+La **régression logistique** présente les meilleures performances globales parmi les modèles évalués. Elle obtient le meilleur **F1-score (0,4681)**, le meilleur **rappel (0,6755)** ainsi que le meilleur **ROC-AUC (0,6777)**. Son rappel élevé signifie qu'elle parvient à identifier une proportion importante des réservations réellement annulées.
+
+La **forêt aléatoire** constitue la deuxième meilleure approche avec un F1-score de **0,4009** et un rappel de **0,4092**. Elle offre ainsi un compromis intéressant entre précision et rappel, tout en permettant de modéliser des relations non linéaires entre les variables.
+
+Le **KNN** et **XGBoost** présentent une accuracy relativement élevée, respectivement **0,7381** et **0,7338**, mais leurs rappels restent faibles (**0,0581** et **0,1308**). Leur bonne accuracy est donc insuffisante pour conclure à une bonne capacité de détection des annulations.
+
+Dans le contexte de ce projet, le **rappel et le F1-score sont privilégiés par rapport à l'accuracy**, car l'objectif principal est de détecter les réservations susceptibles d'être annulées. La **régression logistique est donc retenue comme modèle final de cette première expérimentation**.
 
 ---
-
 ### **5. Réponses aux Questions d’Analyse**
 
 *Répondez précisément aux questions ci-dessous. Utilisez des chiffres, tableaux ou références à vos graphiques pour justifier vos réponses.*
